@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Clean Architecture in Go
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: order
+    description: The orders in the service
+paths:
+  /orders:
+    post:
+      summary: Place a new order
+      operationId: placeOrder
+      tags:
+        - order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceOrderRequest'
+      responses:
+        200:
+          description: Place order successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceOrderResponse'
+
+
+components:
+  schemas:
+    PlaceOrderRequest:
+      type: object
+      required:
+        - name
+        - items
+      properties:
+        name:
+          type: string
+          example: Aotoki
+        items:
+          type: array
+          minimum: 1
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    PlaceOrderResponse:
+      type: object
+      required:
+        - id
+        - name
+        - items
+      properties:
+        id:
+          type: string
+          example: 2ef749d9-b25e-49df-8ff3-54f3873fffb8
+        name:
+          type: string
+          example: Aotoki
+        items:
+          type: array
+          minimum: 1
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      required:
+        - name
+        - quantity
+        - unit_price
+      properties:
+        name:
+          type: string
+          example: Apple
+        quantity:
+          type: number
+          minimum: 1
+          example: 1
+        unit_price:
+          type: number
+          minimum: 1
+          example: 10

@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
+	"net/http"
 	"net/http/httptest"
 
 	"github.com/cucumber/godog"
@@ -45,7 +47,22 @@ func makeAGETRequestTo(ctx context.Context, path string) (context.Context, error
 		return ctx, err
 	}
 
-	req := httptest.NewRequest("GET", path, nil)
+	req := httptest.NewRequest(http.MethodGet, path, nil)
+	res := httptest.NewRecorder()
+
+	server.ServeHTTP(res, req)
+
+	return context.WithValue(ctx, resCtx{}, res), nil
+}
+
+func makeAPOSTRequestTo(ctx context.Context, path string, doc *godog.DocString) (context.Context, error) {
+	server, err := getHttpServer(ctx)
+	if err != nil {
+		return ctx, err
+	}
+
+	req := httptest.NewRequest(http.MethodPost, path, bytes.NewBufferString(doc.Content))
+	req.Header.Add("Content-Type", "application/json")
 	res := httptest.NewRecorder()
 
 	server.ServeHTTP(res, req)

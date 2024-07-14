@@ -18,6 +18,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Before(setupHttpServer)
 
 	ctx.Step(`^make a GET request to "([^"]*)"$`, makeAGETRequestTo)
+	ctx.Step(`^make a POST request to "([^"]*)"$`, makeAPOSTRequestTo)
 	ctx.Step(`^the response status code should be (\d+)$`, theResponseStatusCodeShouldBe)
 
 }
