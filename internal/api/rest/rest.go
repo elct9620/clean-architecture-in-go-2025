@@ -13,17 +13,22 @@ import (
 
 var DefaultSet = wire.NewSet(
 	chi.NewRouter,
+	wire.Struct(new(Api), "*"),
 	NewServer,
 )
 
+var _ ServerInterface = &Api{}
+
+type Api struct {
+}
+
 var _ http.Handler = &Server{}
-var _ ServerInterface = &Server{}
 
 type Server struct {
 	router *chi.Mux
 }
 
-func NewServer(router *chi.Mux) (*Server, error) {
+func NewServer(router *chi.Mux, api *Api) (*Server, error) {
 	apiDoc, err := GetSwagger()
 	if err != nil {
 		return nil, err
@@ -32,11 +37,9 @@ func NewServer(router *chi.Mux) (*Server, error) {
 	router.Use(nethttpmiddleware.OapiRequestValidator(apiDoc))
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
+	HandlerFromMux(api, router)
 
-	server := &Server{router: router}
-	HandlerFromMux(server, router)
-
-	return server, nil
+	return &Server{router: router}, nil
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {

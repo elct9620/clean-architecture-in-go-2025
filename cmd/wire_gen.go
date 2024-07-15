@@ -15,7 +15,8 @@ import (
 
 func initialize() (*rest.Server, error) {
 	mux := chi.NewRouter()
-	server, err := rest.NewServer(mux)
+	api := &rest.Api{}
+	server, err := rest.NewServer(mux, api)
 	if err != nil {
 		return nil, err
 	}
