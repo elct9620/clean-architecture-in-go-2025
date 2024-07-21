@@ -6,7 +6,9 @@ require (
 	github.com/cucumber/godog v0.14.1
 	github.com/getkin/kin-openapi v0.124.0
 	github.com/go-chi/chi/v5 v5.1.0
+	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
+	github.com/jmespath/go-jmespath v0.4.0
 	github.com/oapi-codegen/nethttp-middleware v1.0.2
 	github.com/oapi-codegen/oapi-codegen/v2 v2.3.0
 	github.com/spf13/pflag v1.0.5

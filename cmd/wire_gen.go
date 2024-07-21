@@ -8,6 +8,7 @@ package main
 
 import (
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/rest"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -15,7 +16,10 @@ import (
 
 func initialize() (*rest.Server, error) {
 	mux := chi.NewRouter()
-	api := &rest.Api{}
+	placeOrder := usecase.NewPlaceOrder()
+	api := &rest.Api{
+		PlaceOrderUsecase: placeOrder,
+	}
 	server, err := rest.NewServer(mux, api)
 	if err != nil {
 		return nil, err

@@ -20,7 +20,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^make a GET request to "([^"]*)"$`, makeAGETRequestTo)
 	ctx.Step(`^make a POST request to "([^"]*)"$`, makeAPOSTRequestTo)
 	ctx.Step(`^the response status code should be (\d+)$`, theResponseStatusCodeShouldBe)
-
+	ctx.Step(`^the response JSON contains "([^"]*)" string$`, theResponseJSONContainsString)
+	ctx.Step(`^the response JSON contains "([^"]*)" with value "([^"]*)"$`, theResponseJSONContainsWithValue)
+	ctx.Step(`^the response JSON contains "([^"]*)" with value (\d+\.?\d?)$`, theResponseJSONContainsWithValueNumber)
 }
 
 func TestMain(m *testing.M) {

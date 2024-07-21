@@ -4,6 +4,7 @@ package rest
 import (
 	"net/http"
 
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ var DefaultSet = wire.NewSet(
 var _ ServerInterface = &Api{}
 
 type Api struct {
+	PlaceOrderUsecase *usecase.PlaceOrder
 }
 
 var _ http.Handler = &Server{}

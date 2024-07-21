@@ -19,3 +19,11 @@ Feature: Order
     }
     """
     Then the response status code should be 200
+    And the response JSON contains "id" string
+    And the response JSON contains "name" with value "Aotoki"
+    And the response JSON contains "items[0].name" with value "Apple"
+    And the response JSON contains "items[0].quantity" with value 2
+    And the response JSON contains "items[0].unit_price" with value 10
+    And the response JSON contains "items[1].name" with value "Banana"
+    And the response JSON contains "items[1].quantity" with value 3
+    And the response JSON contains "items[1].unit_price" with value 5
