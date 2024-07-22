@@ -17,7 +17,7 @@ func (api *Api) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 
 	out, err := api.PlaceOrderUsecase.Execute(r.Context(), input)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

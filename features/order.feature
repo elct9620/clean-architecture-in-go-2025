@@ -27,3 +27,25 @@ Feature: Order
     And the response JSON contains "items[1].name" with value "Banana"
     And the response JSON contains "items[1].quantity" with value 3
     And the response JSON contains "items[1].unit_price" with value 5
+
+  Scenario: Cannot place order with same item name
+    When make a POST request to "/orders"
+    """
+    {
+      "name": "Aotoki",
+      "items": [
+        {
+          "name": "Apple",
+          "quantity": 2,
+          "unit_price": 10
+        },
+        {
+          "name": "Apple",
+          "quantity": 3,
+          "unit_price": 5
+        }
+      ]
+    }
+    """
+    Then the response status code should be 400
+    And the response body should be "item name must be unique"

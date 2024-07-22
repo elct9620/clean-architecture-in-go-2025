@@ -23,6 +23,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the response JSON contains "([^"]*)" string$`, theResponseJSONContainsString)
 	ctx.Step(`^the response JSON contains "([^"]*)" with value "([^"]*)"$`, theResponseJSONContainsWithValue)
 	ctx.Step(`^the response JSON contains "([^"]*)" with value (\d+\.?\d?)$`, theResponseJSONContainsWithValueNumber)
+	ctx.Step(`^the response body should be "([^"]*)"$`, theResponseBodyShouldBe)
 }
 
 func TestMain(m *testing.M) {

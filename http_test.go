@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 
 	"github.com/cucumber/godog"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/rest"
@@ -144,6 +145,20 @@ func theResponseJSONContainsWithValueNumber(ctx context.Context, path string, ex
 
 	if actual != expected {
 		return fmt.Errorf("expected %f, got %v", expected, actual)
+	}
+
+	return nil
+}
+
+func theResponseBodyShouldBe(ctx context.Context, expected string) error {
+	res, err := getResponse(ctx)
+	if err != nil {
+		return err
+	}
+
+	actual := strings.TrimSpace(res.Body.String())
+	if actual != expected {
+		return fmt.Errorf("expected '%s', got '%s'", expected, actual)
 	}
 
 	return nil
