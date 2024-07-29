@@ -8,6 +8,7 @@ package main
 
 import (
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/rest"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
 	"github.com/go-chi/chi/v5"
 )
@@ -16,7 +17,8 @@ import (
 
 func initializeTest() (*rest.Server, error) {
 	mux := chi.NewRouter()
-	placeOrder := usecase.NewPlaceOrder()
+	inMemoryOrderRepository := repository.NewInMemoryOrderRepository()
+	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository)
 	api := &rest.Api{
 		PlaceOrderUsecase: placeOrder,
 	}

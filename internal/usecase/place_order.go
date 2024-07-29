@@ -25,10 +25,13 @@ type PlaceOrderOutput struct {
 }
 
 type PlaceOrder struct {
+	orders OrderRepository
 }
 
-func NewPlaceOrder() *PlaceOrder {
-	return &PlaceOrder{}
+func NewPlaceOrder(orders OrderRepository) *PlaceOrder {
+	return &PlaceOrder{
+		orders: orders,
+	}
 }
 
 func (u *PlaceOrder) Execute(ctx context.Context, input *PlaceOrderInput) (*PlaceOrderOutput, error) {
@@ -42,6 +45,10 @@ func (u *PlaceOrder) Execute(ctx context.Context, input *PlaceOrderInput) (*Plac
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if err := u.orders.Save(ctx, order); err != nil {
+		return nil, err
 	}
 
 	out := &PlaceOrderOutput{

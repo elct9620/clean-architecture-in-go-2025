@@ -1,11 +1,9 @@
 package main
 
 import (
-	"os"
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/spf13/pflag"
 )
 
 var opts = godog.Options{}
@@ -26,20 +24,17 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the response body should be "([^"]*)"$`, theResponseBodyShouldBe)
 }
 
-func TestMain(m *testing.M) {
-	pflag.Parse()
-	opts.Paths = pflag.Args()
+func TestFeatures(t *testing.T) {
+	o := opts
+	o.TestingT = t
 
 	status := godog.TestSuite{
 		Name:                "Clean Architecture in Go 2025",
 		ScenarioInitializer: InitializeScenario,
-		Options:             &opts,
+		Options:             &o,
 	}.Run()
 
-	// Optional: Run `testing` package's logic besides godog.
-	if st := m.Run(); st > status {
-		status = st
+	if status != 0 {
+		t.Errorf("godog failed with status: %d", status)
 	}
-
-	os.Exit(status)
 }
