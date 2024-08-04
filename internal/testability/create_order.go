@@ -16,7 +16,11 @@ func (api *Api) CreateOrder(w http.ResponseWriter, r *http.Request) {
 
 	order := orders.New(req.Id, req.Name)
 	for _, item := range req.Items {
-		order.AddItem(item.Name, int(item.Quantity), int(item.UnitPrice))
+		err := order.AddItem(item.Name, int(item.Quantity), int(item.UnitPrice))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 	}
 
 	err := api.OrderRepository.Save(r.Context(), order)

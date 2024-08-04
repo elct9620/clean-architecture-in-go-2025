@@ -36,7 +36,10 @@ func (r *InMemoryOrderRepository) Find(ctx context.Context, id string) (*orders.
 
 	order := orders.New(id, orderSchema.CustomerName)
 	for _, itemSchema := range orderSchema.Items {
-		order.AddItem(itemSchema.Name, itemSchema.Quantity, itemSchema.UnitPrice)
+		err := order.AddItem(itemSchema.Name, itemSchema.Quantity, itemSchema.UnitPrice)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return order, nil
