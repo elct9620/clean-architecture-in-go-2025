@@ -28,6 +28,20 @@ func NewInMemoryOrderRepository() *InMemoryOrderRepository {
 	}
 }
 
+func (r *InMemoryOrderRepository) Find(ctx context.Context, id string) (*orders.Order, error) {
+	orderSchema, ok := r.orders[id]
+	if !ok {
+		return nil, orders.ErrOrderNotFound
+	}
+
+	order := orders.New(id, orderSchema.CustomerName)
+	for _, itemSchema := range orderSchema.Items {
+		order.AddItem(itemSchema.Name, itemSchema.Quantity, itemSchema.UnitPrice)
+	}
+
+	return order, nil
+}
+
 func (r *InMemoryOrderRepository) Save(ctx context.Context, order *orders.Order) error {
 	items := []InMemoryOrderItemSchema{}
 

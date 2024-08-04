@@ -11,10 +11,11 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0
 	github.com/oapi-codegen/nethttp-middleware v1.0.2
 	github.com/oapi-codegen/oapi-codegen/v2 v2.3.0
-	github.com/spf13/pflag v1.0.5
+	github.com/oapi-codegen/runtime v1.1.1
 )
 
 require (
+	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/cucumber/gherkin/go/v26 v26.2.0 // indirect
 	github.com/cucumber/messages/go/v21 v21.0.1 // indirect
 	github.com/go-openapi/jsonpointer v0.20.2 // indirect
@@ -29,6 +30,7 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
 	golang.org/x/tools v0.21.0 // indirect

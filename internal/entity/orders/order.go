@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	ErrItemNameMustBeUnique = errors.New("item name must be unique")
+	ErrOrderNotFound        = errors.New("order not found")
 )
 
 type Order struct {

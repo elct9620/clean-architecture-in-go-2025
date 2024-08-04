@@ -7,5 +7,6 @@ import (
 )
 
 type OrderRepository interface {
+	Find(ctx context.Context, id string) (*orders.Order, error)
 	Save(ctx context.Context, order *orders.Order) error
 }

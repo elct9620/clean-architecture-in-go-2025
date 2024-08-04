@@ -6,6 +6,27 @@ tags:
   - name: order
     description: The orders in the service
 paths:
+  /orders/{orderId}:
+    get:
+      summary: Lookup an order
+      operationId: lookupOrder
+      tags:
+        - order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          description: The UUID of order
+          schema:
+            type: string
+            example: 2ef749d9-b25e-49df-8ff3-54f3873fffb8
+      responses:
+        200:
+          description: Order found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LookupOrderResponse'
   /orders:
     post:
       summary: Place a new order
@@ -43,6 +64,24 @@ components:
           items:
             $ref: '#/components/schemas/OrderItem'
     PlaceOrderResponse:
+      type: object
+      required:
+        - id
+        - name
+        - items
+      properties:
+        id:
+          type: string
+          example: 2ef749d9-b25e-49df-8ff3-54f3873fffb8
+        name:
+          type: string
+          example: Aotoki
+        items:
+          type: array
+          minimum: 1
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    LookupOrderResponse:
       type: object
       required:
         - id

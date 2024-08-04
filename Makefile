@@ -1,6 +1,11 @@
 all: codegen
 
-codegen: wire
+codegen: openapi wire
+
+openapi:
+	@echo "Generating OpenAPI interface..."
+	@go generate ./internal/api/rest
+	@go generate ./internal/testability
 
 wire:
 	@echo "Generating wire files..."
