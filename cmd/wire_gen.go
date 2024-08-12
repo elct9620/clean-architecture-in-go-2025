@@ -19,7 +19,8 @@ import (
 func initialize() (*rest.Server, error) {
 	mux := chi.NewRouter()
 	inMemoryOrderRepository := repository.NewInMemoryOrderRepository()
-	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository)
+	inMemoryTokenRepository := repository.NewInMemoryTokenRepository()
+	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository)
 	lookupOrder := usecase.NewLookupOrder(inMemoryOrderRepository)
 	api := &rest.Api{
 		PlaceOrderUsecase:  placeOrder,

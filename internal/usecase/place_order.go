@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/entity/orders"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/entity/tokens"
 	"github.com/google/uuid"
 )
 
@@ -26,18 +27,27 @@ type PlaceOrderOutput struct {
 
 type PlaceOrder struct {
 	orders OrderRepository
+	tokens TokenRepository
 }
 
-func NewPlaceOrder(orders OrderRepository) *PlaceOrder {
+func NewPlaceOrder(orders OrderRepository, tokens TokenRepository) *PlaceOrder {
 	return &PlaceOrder{
 		orders: orders,
+		tokens: tokens,
 	}
 }
 
 func (u *PlaceOrder) Execute(ctx context.Context, input *PlaceOrderInput) (*PlaceOrderOutput, error) {
+	nameToken := tokens.New(uuid.NewString())
+	nameToken.SetData([]byte(input.Name))
+
+	if err := u.tokens.Save(ctx, nameToken); err != nil {
+		return nil, err
+	}
+
 	order := orders.New(
 		uuid.NewString(),
-		input.Name,
+		nameToken.String(),
 	)
 
 	for _, item := range input.Items {
@@ -53,7 +63,7 @@ func (u *PlaceOrder) Execute(ctx context.Context, input *PlaceOrderInput) (*Plac
 
 	out := &PlaceOrderOutput{
 		Id:    order.Id(),
-		Name:  order.CustomerName(),
+		Name:  nameToken.Raw(),
 		Items: []PlaceOrderItem{},
 	}
 

@@ -8,4 +8,6 @@ import (
 var DefaultSet = wire.NewSet(
 	NewInMemoryOrderRepository,
 	wire.Bind(new(usecase.OrderRepository), new(*InMemoryOrderRepository)),
+	NewInMemoryTokenRepository,
+	wire.Bind(new(usecase.TokenRepository), new(*InMemoryTokenRepository)),
 )
