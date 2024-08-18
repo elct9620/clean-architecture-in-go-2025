@@ -1,8 +1,14 @@
 package tokens
 
+import "errors"
+
 const (
 	CurrentVersion = "v1"
 )
+
+var ErrTokenNotFound = errors.New("token not found")
+
+type TokenOption func(*Token)
 
 type Token struct {
 	id      string
@@ -10,11 +16,17 @@ type Token struct {
 	version string
 }
 
-func New(id string) *Token {
-	return &Token{
+func New(id string, opts ...TokenOption) *Token {
+	token := &Token{
 		id:      id,
 		version: CurrentVersion,
 	}
+
+	for _, opt := range opts {
+		opt(token)
+	}
+
+	return token
 }
 
 func (t *Token) Id() string {
@@ -39,4 +51,16 @@ func (t *Token) Raw() string {
 
 func (t Token) String() string {
 	return t.version + ":" + t.id
+}
+
+func WithVersion(version string) func(*Token) {
+	return func(t *Token) {
+		t.version = version
+	}
+}
+
+func WithData(data []byte) func(*Token) {
+	return func(t *Token) {
+		t.data = data
+	}
 }

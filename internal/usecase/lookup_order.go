@@ -20,11 +20,13 @@ type LookupOrderOutput struct {
 
 type LookupOrder struct {
 	orders OrderRepository
+	tokens TokenRepository
 }
 
-func NewLookupOrder(orders OrderRepository) *LookupOrder {
+func NewLookupOrder(orders OrderRepository, tokens TokenRepository) *LookupOrder {
 	return &LookupOrder{
 		orders: orders,
+		tokens: tokens,
 	}
 }
 
@@ -34,9 +36,14 @@ func (u *LookupOrder) Execute(ctx context.Context, input *LookupOrderInput) (*Lo
 		return nil, err
 	}
 
+	nameToken, err := u.tokens.Find(ctx, order.CustomerName())
+	if err != nil {
+		return nil, err
+	}
+
 	out := &LookupOrderOutput{
 		Id:    order.Id(),
-		Name:  order.CustomerName(),
+		Name:  string(nameToken.Raw()),
 		Items: []LookupOrderItem{},
 	}
 

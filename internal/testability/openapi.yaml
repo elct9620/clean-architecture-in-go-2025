@@ -24,6 +24,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedResponse'
+  /testability/tokens:
+    post:
+      summary: Create a new token
+      operationId: createToken
+      tags:
+        - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTokenRequest'
+      responses:
+        200:
+          description: Create token successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedResponse'
 
 
 components:
@@ -72,3 +90,19 @@ components:
           type: number
           minimum: 1
           example: 10
+    CreateTokenRequest:
+      type: object
+      required:
+        - id
+        - version
+        - data
+      properties:
+        id:
+          type: string
+          example: 2ef749d9-b25e-49df-8ff3-54f3873fffb8
+        version:
+          type: string
+          example: v1
+        data:
+          type: string
+          example: QW90b2tpCg==

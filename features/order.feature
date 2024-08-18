@@ -51,11 +51,19 @@ Feature: Order
     And the response body should be "item name must be unique"
 
   Scenario: I can lookup an order by id
-    Given make a POST request to "/testability/orders"
+    Given make a POST request to "/testability/tokens"
+    """
+    {
+      "id": "ca244c41-596e-4540-a9e3-afe270b62537",
+      "version": "v1",
+      "data": "QW90b2tp"
+    }
+    """
+    And make a POST request to "/testability/orders"
     """
     {
       "id": "523a46a2-1c3d-4ca3-abe4-a55d8a8bceae",
-      "name": "Aotoki",
+      "name": "v1:ca244c41-596e-4540-a9e3-afe270b62537",
       "items": [
         {
           "name": "Apple",

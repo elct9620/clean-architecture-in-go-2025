@@ -13,5 +13,6 @@ type OrderRepository interface {
 }
 
 type TokenRepository interface {
+	Find(ctx context.Context, id string) (*tokens.Token, error)
 	Save(ctx context.Context, token *tokens.Token) error
 }

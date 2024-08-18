@@ -24,6 +24,13 @@ type CreateOrderRequest struct {
 	Name  string      `json:"name"`
 }
 
+// CreateTokenRequest defines model for CreateTokenRequest.
+type CreateTokenRequest struct {
+	Data    string `json:"data"`
+	Id      string `json:"id"`
+	Version string `json:"version"`
+}
+
 // CreatedResponse defines model for CreatedResponse.
 type CreatedResponse struct {
 	Id string `json:"id"`
@@ -39,11 +46,17 @@ type OrderItem struct {
 // CreateOrderJSONRequestBody defines body for CreateOrder for application/json ContentType.
 type CreateOrderJSONRequestBody = CreateOrderRequest
 
+// CreateTokenJSONRequestBody defines body for CreateToken for application/json ContentType.
+type CreateTokenJSONRequestBody = CreateTokenRequest
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Create a new order
 	// (POST /testability/orders)
 	CreateOrder(w http.ResponseWriter, r *http.Request)
+	// Create a new token
+	// (POST /testability/tokens)
+	CreateToken(w http.ResponseWriter, r *http.Request)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -53,6 +66,12 @@ type Unimplemented struct{}
 // Create a new order
 // (POST /testability/orders)
 func (_ Unimplemented) CreateOrder(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Create a new token
+// (POST /testability/tokens)
+func (_ Unimplemented) CreateToken(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -71,6 +90,21 @@ func (siw *ServerInterfaceWrapper) CreateOrder(w http.ResponseWriter, r *http.Re
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.CreateOrder(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// CreateToken operation middleware
+func (siw *ServerInterfaceWrapper) CreateToken(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateToken(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -196,6 +230,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	r.Group(func(r chi.Router) {
 		r.Post(options.BaseURL+"/testability/orders", wrapper.CreateOrder)
 	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/testability/tokens", wrapper.CreateToken)
+	})
 
 	return r
 }
@@ -203,15 +240,16 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/7RTT2/bPgz9KgZ/v8MGJHX+FU1863oYehpQ9DYEgyJTDbvoTyS6WxD4uw+SnBhpjO2y",
-	"XWyZ5iMfnx6PIK121qDhANURgtyiFun44FEwfvE1+ifcNxg4Rp23Dj0Tphyq4xN/Cu12CBXMUN0tVvVq",
-	"vJnd4nixqtV4qdR8fLtQ8+XdXCm1WcII+OBidmBP5gXaERCjzgVPh/89Kqjgv7LnV3bkysTpkVFHqCZD",
-	"utFQTc91hffiEP8ZofGS4L1l+52uKbQj8LhvyGMN1dc4V4c+cVufIXbzipJj+axQ/YTBWRPwX8lzzW2I",
-	"TC/KFY0BGVx8D1zEvhGGiQ8X6dNBlU2jN+gjqDHE35wnedllOvkt7t1YndpnAhdlrweOcDLKxo5MnKZ6",
-	"2KEwxb2XW2KU3HgsyBSfbfHhGQOLDe2IDx9hBG/oA1kDFUxvJjeTOIN1aIQjqGCeQiNwgrdJvpJ7dGmj",
-	"zCnsbN6IqLRgsuaxjhz6rYE8IAb+ZOukqLSG0SSUcG5HMuHK1xC5nJbvT+4f2Mu2zWpmHyZ2s8nkL3fs",
-	"fZ661RikJ8dZx5xSJHWK0EiJIahml245NFoLf+izRGHwR86NHhQvIRogf69T8S52fNfledu1CPFieYtF",
-	"QP8WDXLa9a5Ku25/BQAA//9y9MFl2gQAAA==",
+	"H4sIAAAAAAAC/8yVX2/aPBTGv0rk973YJGgCtCpE6kXHxdSraRXSLiY0OckJnBb/wT5hQyjffbIdyFLS",
+	"tRettBtIjJ/j5/z82BxYroRWEiRZlh6YzdcguH+cG+AEX0wB5h62FVhyo9ooDYYQ/Bws3Cf84kJvgKVs",
+	"DOX15ayYDbPxFQwvZ0U5nJblZHh1WU6m15OyLLMpGzDaazfbkkG5YvWAIYEIBY8P/xsoWcr+i1t/cWMu",
+	"9p7uCISTCpQoKsHS0akuN4bv3W+SC+gavFWkHvHcQj1gBrYVGihY+t311aiP3pYnicoeICdXPhBaqEeQ",
+	"zxIqOPGuha/fZkk2Jj1f3dz0sngjpjswFpXsFtuNXtf7UTwIDTzffXEPVitp4b3Cce6uz0wbiTMbPSHQ",
+	"7rsH2bbikpD2nemj3ozJSmRgnKiSSD+0wby7yij5q+5JW03WTgY6Zc8bdnKUpXIrEpLvar4BLqNbk6+R",
+	"IKfKQIQy+qyiDwuwxDPcIO0//rG3KRtdJBeJ60FpkFwjS9nEDw2Y5rT2+GJq1bFymP2wViHtjjQnVPKu",
+	"cB7aO4OFBsHSJ1V4ormSBNKruNYbzL0ufrAhpOF0v3T2e26lug40Qw69u3GSvPGKbc79agXY3KCmwDFM",
+	"iTydyFZ5DtaW1cbvsq2E4GbfzuKRhJ9hrssgX1kXgPC+dIoOcXK3y4vE/R30rsQ7t9w/Q9zTeSVxahgd",
+	"iYf3pS/ejB2erLJYN5tq3VGiNUQWzM4dyeN/S7Nv9bL+HQAA///nTxyxSgcAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

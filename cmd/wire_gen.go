@@ -21,13 +21,14 @@ func initialize() (*rest.Server, error) {
 	inMemoryOrderRepository := repository.NewInMemoryOrderRepository()
 	inMemoryTokenRepository := repository.NewInMemoryTokenRepository()
 	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository)
-	lookupOrder := usecase.NewLookupOrder(inMemoryOrderRepository)
+	lookupOrder := usecase.NewLookupOrder(inMemoryOrderRepository, inMemoryTokenRepository)
 	api := &rest.Api{
 		PlaceOrderUsecase:  placeOrder,
 		LookupOrderUsecase: lookupOrder,
 	}
 	testabilityApi := &testability.Api{
 		OrderRepository: inMemoryOrderRepository,
+		TokenRepository: inMemoryTokenRepository,
 	}
 	server, err := rest.NewServer(mux, api, testabilityApi)
 	if err != nil {

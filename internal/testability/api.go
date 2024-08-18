@@ -14,4 +14,5 @@ var _ ServerInterface = &Api{}
 
 type Api struct {
 	OrderRepository usecase.OrderRepository
+	TokenRepository usecase.TokenRepository
 }
