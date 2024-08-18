@@ -36,14 +36,14 @@ func (u *LookupOrder) Execute(ctx context.Context, input *LookupOrderInput) (*Lo
 		return nil, err
 	}
 
-	nameToken, err := u.tokens.Find(ctx, order.CustomerName())
-	if err != nil {
-		return nil, err
+	customerName := order.CustomerName()
+	if nameToken, err := u.tokens.Find(ctx, order.CustomerName()); err == nil {
+		customerName = string(nameToken.Raw())
 	}
 
 	out := &LookupOrderOutput{
 		Id:    order.Id(),
-		Name:  string(nameToken.Raw()),
+		Name:  customerName,
 		Items: []LookupOrderItem{},
 	}
 

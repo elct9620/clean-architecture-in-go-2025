@@ -24,7 +24,12 @@ func NewInMemoryTokenRepository() *InMemoryTokenRepository {
 }
 
 func (r *InMemoryTokenRepository) Find(ctx context.Context, id string) (*tokens.Token, error) {
-	id = strings.SplitN(id, ":", 2)[1]
+	segments := strings.SplitN(id, ":", 2)
+	if len(segments) != 2 {
+		return nil, tokens.ErrTokenNotFound
+	}
+
+	id = segments[1]
 	token, ok := r.tokens[id]
 	if !ok {
 		return nil, tokens.ErrTokenNotFound
