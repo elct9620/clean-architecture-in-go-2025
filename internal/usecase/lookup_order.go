@@ -38,7 +38,7 @@ func (u *LookupOrder) Execute(ctx context.Context, input *LookupOrderInput) (*Lo
 
 	customerName := order.CustomerName()
 	if nameToken, err := u.tokens.Find(ctx, order.CustomerName()); err == nil {
-		customerName = string(nameToken.Raw())
+		customerName = string(nameToken.Data())
 	}
 
 	out := &LookupOrderOutput{

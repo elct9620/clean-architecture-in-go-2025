@@ -63,7 +63,7 @@ func (u *PlaceOrder) Execute(ctx context.Context, input *PlaceOrderInput) (*Plac
 
 	out := &PlaceOrderOutput{
 		Id:    order.Id(),
-		Name:  nameToken.Raw(),
+		Name:  string(nameToken.Data()),
 		Items: []PlaceOrderItem{},
 	}
 

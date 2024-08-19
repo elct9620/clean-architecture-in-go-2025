@@ -45,10 +45,6 @@ func (t *Token) SetData(data []byte) {
 	t.data = data
 }
 
-func (t *Token) Raw() string {
-	return string(t.data)
-}
-
 func (t Token) String() string {
 	return t.version + ":" + t.id
 }

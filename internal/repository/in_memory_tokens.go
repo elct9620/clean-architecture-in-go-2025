@@ -23,13 +23,13 @@ func NewInMemoryTokenRepository() *InMemoryTokenRepository {
 	}
 }
 
-func (r *InMemoryTokenRepository) Find(ctx context.Context, id string) (*tokens.Token, error) {
-	segments := strings.SplitN(id, ":", 2)
+func (r *InMemoryTokenRepository) Find(ctx context.Context, tokenStr string) (*tokens.Token, error) {
+	segments := strings.SplitN(tokenStr, ":", 2)
 	if len(segments) != 2 {
 		return nil, tokens.ErrTokenNotFound
 	}
 
-	id = segments[1]
+	id := segments[1]
 	token, ok := r.tokens[id]
 	if !ok {
 		return nil, tokens.ErrTokenNotFound
