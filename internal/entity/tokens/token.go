@@ -6,7 +6,11 @@ const (
 	CurrentVersion = "v1"
 )
 
-var ErrTokenNotFound = errors.New("token not found")
+var (
+	ErrTokenNotFound   = errors.New("token not found")
+	ErrUnableToEncrypt = errors.New("unable to encrypt token")
+	ErrUnableToDecrypt = errors.New("unable to decrypt token")
+)
 
 type TokenOption func(*Token)
 
