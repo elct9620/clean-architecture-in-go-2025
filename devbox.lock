@@ -1,0 +1,53 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "grpcurl@latest": {
+      "last_modified": "2024-08-14T11:41:26Z",
+      "resolved": "github:NixOS/nixpkgs/0cb2fd7c59fed0cd82ef858cbcbdb552b9a33465#grpcurl",
+      "source": "devbox-search",
+      "version": "1.9.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/99v494cnc409glcxnlp58fwfkgc55vcb-grpcurl-1.9.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/99v494cnc409glcxnlp58fwfkgc55vcb-grpcurl-1.9.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nvhawh653v6j3j4l4h937ijshhzzv1z4-grpcurl-1.9.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/nvhawh653v6j3j4l4h937ijshhzzv1z4-grpcurl-1.9.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/a4sbdm26rikp871kc6kr52d8gkibnw9s-grpcurl-1.9.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/a4sbdm26rikp871kc6kr52d8gkibnw9s-grpcurl-1.9.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/3y5ydcqcaig3bif3wjzn02hc4hcqz5mi-grpcurl-1.9.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/3y5ydcqcaig3bif3wjzn02hc4hcqz5mi-grpcurl-1.9.1"
+        }
+      }
+    }
+  }
+}
