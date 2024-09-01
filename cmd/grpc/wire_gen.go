@@ -8,12 +8,24 @@ package main
 
 import (
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/grpc"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
 )
 
 // Injectors from wire.go:
 
 func initialize() (*grpc.Server, error) {
-	orderServer := grpc.NewOrderServer()
+	inMemoryOrderRepository := repository.NewInMemoryOrderRepository()
+	inMemoryTokenRepository, err := repository.NewInMemoryTokenRepository()
+	if err != nil {
+		return nil, err
+	}
+	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository)
+	lookupOrder := usecase.NewLookupOrder(inMemoryOrderRepository, inMemoryTokenRepository)
+	orderServer := &grpc.OrderServer{
+		PlaceOrderUsecase:  placeOrder,
+		LookupOrderUsecase: lookupOrder,
+	}
 	server := grpc.NewServer(orderServer)
 	return server, nil
 }

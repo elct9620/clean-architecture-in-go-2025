@@ -3,6 +3,7 @@ package grpc
 import (
 	"net"
 
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
 	"github.com/elct9620/clean-architecture-in-go-2025/pkg/orderspb"
 	"github.com/google/wire"
 	"google.golang.org/grpc"
@@ -10,18 +11,16 @@ import (
 )
 
 var DefaultSet = wire.NewSet(
-	NewOrderServer,
+	wire.Struct(new(OrderServer), "*"),
 	NewServer,
 )
 
 var _ orderspb.OrderServer = &OrderServer{}
 
 type OrderServer struct {
-	orderspb.OrderServer
-}
-
-func NewOrderServer() *OrderServer {
-	return &OrderServer{}
+	orderspb.OrderServer `wire:"-"`
+	PlaceOrderUsecase    *usecase.PlaceOrder
+	LookupOrderUsecase   *usecase.LookupOrder
 }
 
 type Server struct {
