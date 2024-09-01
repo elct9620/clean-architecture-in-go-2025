@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option go_package = "github.com/elct9620/clean-architecture-in-go-2025/pkg/orderspb";
+
+package orders;
+
+service Order {
+  rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse);
+  rpc LookupOrder(LookupOrderRequest) returns (LookupOrderResponse);
+}
+
+message PlaceOrderRequest {
+  string name = 1;
+  repeated OrderItem items = 2;
+}
+
+message PlaceOrderResponse {
+  string id = 1;
+  string name = 2;
+  repeated OrderItem items = 3;
+}
+
+message LookupOrderRequest {
+  string id = 1;
+}
+
+message LookupOrderResponse {
+  string id = 1;
+  string name = 2;
+  repeated OrderItem items = 3;
+}
+
+message OrderItem {
+  string name = 1;
+  int32 quantity = 2;
+  int32 unit_price = 3;
+}
