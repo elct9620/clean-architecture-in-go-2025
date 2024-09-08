@@ -10,6 +10,7 @@ import (
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/grpc"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/validator"
 )
 
 // Injectors from wire.go:
@@ -20,7 +21,8 @@ func initialize() (*grpc.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository)
+	validatorValidator := validator.New()
+	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository, validatorValidator)
 	lookupOrder := usecase.NewLookupOrder(inMemoryOrderRepository, inMemoryTokenRepository)
 	orderServer := &grpc.OrderServer{
 		PlaceOrderUsecase:  placeOrder,

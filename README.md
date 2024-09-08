@@ -8,11 +8,11 @@ This is example code for the series [Clean Architecture in Go](https://blog.aoto
 ### Lookup Order
 
 ```shell
-grpcurl -plaintext -d '{"id": "d6ec-1c06-4e0b-aa57-9b2335fc56c3"}' localhost:8080 order.OrderService/LookupOrder
+grpcurl -plaintext -d '{"id": "d6ec-1c06-4e0b-aa57-9b2335fc56c3"}' localhost:8080 orders.Order/LookupOrder
 ```
 
 ### Place Order
 
 ```shell
-grpcurl -plaintext -d '{"name": "Aotoki", "items": [{"name": "Apple", "quantity": 1, "unit_price": 10 }]}' localhost:8080 order.OrderService/PlaceOrder
+grpcurl -plaintext -d '{"name": "Aotoki", "items": [{"name": "Apple", "quantity": 1, "unit_price": 10 }]}' localhost:8080 orders.Order/PlaceOrder
 ```

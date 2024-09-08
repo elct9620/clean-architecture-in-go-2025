@@ -11,6 +11,7 @@ import (
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/testability"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/validator"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -23,7 +24,8 @@ func initialize() (*rest.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository)
+	validatorValidator := validator.New()
+	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository, validatorValidator)
 	lookupOrder := usecase.NewLookupOrder(inMemoryOrderRepository, inMemoryTokenRepository)
 	api := &rest.Api{
 		PlaceOrderUsecase:  placeOrder,

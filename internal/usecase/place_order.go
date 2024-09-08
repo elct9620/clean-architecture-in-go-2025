@@ -9,14 +9,14 @@ import (
 )
 
 type PlaceOrderItem struct {
-	Name      string
-	Quantity  int
-	UnitPrice int
+	Name      string `validate:"required"`
+	Quantity  int    `validate:"required,gte=1"`
+	UnitPrice int    `validate:"required,gte=1"`
 }
 
 type PlaceOrderInput struct {
-	Name  string
-	Items []PlaceOrderItem
+	Name  string           `validate:"required"`
+	Items []PlaceOrderItem `validate:"required,gt=0,dive,required"`
 }
 
 type PlaceOrderOutput struct {
@@ -26,18 +26,24 @@ type PlaceOrderOutput struct {
 }
 
 type PlaceOrder struct {
-	orders OrderRepository
-	tokens TokenRepository
+	orders    OrderRepository
+	tokens    TokenRepository
+	validator Validator
 }
 
-func NewPlaceOrder(orders OrderRepository, tokens TokenRepository) *PlaceOrder {
+func NewPlaceOrder(orders OrderRepository, tokens TokenRepository, validator Validator) *PlaceOrder {
 	return &PlaceOrder{
-		orders: orders,
-		tokens: tokens,
+		orders:    orders,
+		tokens:    tokens,
+		validator: validator,
 	}
 }
 
 func (u *PlaceOrder) Execute(ctx context.Context, input *PlaceOrderInput) (*PlaceOrderOutput, error) {
+	if err := u.validator.Validate(ctx, input); err != nil {
+		return nil, err
+	}
+
 	nameToken := tokens.New(uuid.NewString())
 	nameToken.SetData([]byte(input.Name))
 
