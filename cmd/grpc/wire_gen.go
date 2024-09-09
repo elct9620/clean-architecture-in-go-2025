@@ -7,6 +7,7 @@
 package main
 
 import (
+	"errors"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/grpc"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
@@ -15,11 +16,11 @@ import (
 
 // Injectors from wire.go:
 
-func initialize() (*grpc.Server, error) {
+func initializeInMemory() (*grpc.Server, func(), error) {
 	inMemoryOrderRepository := repository.NewInMemoryOrderRepository()
 	inMemoryTokenRepository, err := repository.NewInMemoryTokenRepository()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	validatorValidator := validator.New()
 	placeOrder := usecase.NewPlaceOrder(inMemoryOrderRepository, inMemoryTokenRepository, validatorValidator)
@@ -29,5 +30,41 @@ func initialize() (*grpc.Server, error) {
 		LookupOrderUsecase: lookupOrder,
 	}
 	server := grpc.NewServer(orderServer)
-	return server, nil
+	return server, func() {
+	}, nil
+}
+
+func initializeBolt() (*grpc.Server, func(), error) {
+	db, err := provideBoltDb()
+	if err != nil {
+		return nil, nil, err
+	}
+	boltOrderRepository := repository.NewBoltOrderRepository(db)
+	boltTokenRepository, err := repository.NewBoltTokenRepository(db)
+	if err != nil {
+		return nil, nil, err
+	}
+	validatorValidator := validator.New()
+	placeOrder := usecase.NewPlaceOrder(boltOrderRepository, boltTokenRepository, validatorValidator)
+	lookupOrder := usecase.NewLookupOrder(boltOrderRepository, boltTokenRepository)
+	orderServer := &grpc.OrderServer{
+		PlaceOrderUsecase:  placeOrder,
+		LookupOrderUsecase: lookupOrder,
+	}
+	server := grpc.NewServer(orderServer)
+	return server, func() {
+	}, nil
+}
+
+// wire.go:
+
+func initialize(databaseType string) (*grpc.Server, func(), error) {
+	switch databaseType {
+	case "in-memory":
+		return initializeInMemory()
+	case "bolt":
+		return initializeBolt()
+	default:
+		return nil, func() {}, errors.New("unsupported database type")
+	}
 }

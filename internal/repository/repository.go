@@ -11,3 +11,10 @@ var DefaultSet = wire.NewSet(
 	NewInMemoryTokenRepository,
 	wire.Bind(new(usecase.TokenRepository), new(*InMemoryTokenRepository)),
 )
+
+var BoltSet = wire.NewSet(
+	NewBoltOrderRepository,
+	wire.Bind(new(usecase.OrderRepository), new(*BoltOrderRepository)),
+	NewBoltTokenRepository,
+	wire.Bind(new(usecase.TokenRepository), new(*BoltTokenRepository)),
+)
