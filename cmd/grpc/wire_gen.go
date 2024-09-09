@@ -35,13 +35,14 @@ func initializeInMemory() (*grpc.Server, func(), error) {
 }
 
 func initializeBolt() (*grpc.Server, func(), error) {
-	db, err := provideBoltDb()
+	db, cleanup, err := provideBoltDb()
 	if err != nil {
 		return nil, nil, err
 	}
 	boltOrderRepository := repository.NewBoltOrderRepository(db)
 	boltTokenRepository, err := repository.NewBoltTokenRepository(db)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	validatorValidator := validator.New()
@@ -53,6 +54,7 @@ func initializeBolt() (*grpc.Server, func(), error) {
 	}
 	server := grpc.NewServer(orderServer)
 	return server, func() {
+		cleanup()
 	}, nil
 }
 

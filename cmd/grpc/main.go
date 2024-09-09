@@ -7,8 +7,13 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-func provideBoltDb() (*bolt.DB, error) {
-	return bolt.Open("bolt.db", 0600, nil)
+func provideBoltDb() (*bolt.DB, func(), error) {
+	db, err := bolt.Open("bolt.db", 0600, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return db, func() { db.Close() }, nil
 }
 
 func main() {
