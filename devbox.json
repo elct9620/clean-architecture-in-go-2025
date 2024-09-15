@@ -1,6 +1,9 @@
 {
-  "$schema":  "https://raw.githubusercontent.com/jetify-com/devbox/0.11.0/.schema/devbox.schema.json",
-  "packages": ["grpcurl@latest"],
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.11.0/.schema/devbox.schema.json",
+  "packages": [
+    "grpcurl@latest",
+    "sqlc@latest"
+  ],
   "shell": {
     "init_hook": [
       "echo 'Welcome to devbox!' > /dev/null"
