@@ -26,3 +26,4 @@ go.work.sum
 
 # Examples
 bolt.db
+sqlite3.db

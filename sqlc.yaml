@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    schema: "db/schema.sql"
+    queries:
+      - "db/tokens.sql"
+      - "db/orders.sql"
+    gen:
+      go:
+        package: "sqlite"
+        out: "internal/repository/sqlite"

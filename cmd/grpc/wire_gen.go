@@ -10,8 +10,13 @@ import (
 	"errors"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/api/grpc"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository"
+	"github.com/elct9620/clean-architecture-in-go-2025/internal/repository/sqlite"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/usecase"
 	"github.com/elct9620/clean-architecture-in-go-2025/internal/validator"
+)
+
+import (
+	_ "embed"
 )
 
 // Injectors from wire.go:
@@ -58,6 +63,31 @@ func initializeBolt() (*grpc.Server, func(), error) {
 	}, nil
 }
 
+func initializeSQLite() (*grpc.Server, func(), error) {
+	db, cleanup, err := provideSQLiteDb()
+	if err != nil {
+		return nil, nil, err
+	}
+	queries := sqlite.New(db)
+	sqLiteOrderRepository := repository.NewSQLiteOrderRepository(db, queries)
+	sqLiteTokenRepository, err := repository.NewSQLiteTokenRepository(queries)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	validatorValidator := validator.New()
+	placeOrder := usecase.NewPlaceOrder(sqLiteOrderRepository, sqLiteTokenRepository, validatorValidator)
+	lookupOrder := usecase.NewLookupOrder(sqLiteOrderRepository, sqLiteTokenRepository)
+	orderServer := &grpc.OrderServer{
+		PlaceOrderUsecase:  placeOrder,
+		LookupOrderUsecase: lookupOrder,
+	}
+	server := grpc.NewServer(orderServer)
+	return server, func() {
+		cleanup()
+	}, nil
+}
+
 // wire.go:
 
 func initialize(databaseType string) (*grpc.Server, func(), error) {
@@ -66,6 +96,8 @@ func initialize(databaseType string) (*grpc.Server, func(), error) {
 		return initializeInMemory()
 	case "bolt":
 		return initializeBolt()
+	case "sqlite":
+		return initializeSQLite()
 	default:
 		return nil, func() {}, errors.New("unsupported database type")
 	}
