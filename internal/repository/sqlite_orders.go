@@ -48,12 +48,14 @@ func (r *SQLiteOrderRepository) Find(ctx context.Context, id string) (*orders.Or
 	return orderEntity, nil
 }
 
-func (r *SQLiteOrderRepository) Save(ctx context.Context, order *orders.Order) error {
+func (r *SQLiteOrderRepository) Save(ctx context.Context, order *orders.Order) (err error) {
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() {
+		err = tx.Rollback()
+	}()
 
 	qtx := r.queries.WithTx(tx)
 
