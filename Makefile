@@ -1,6 +1,10 @@
 all: codegen
 
-codegen: openapi grpc wire
+codegen: openapi grpc sqlc wire
+
+sqlc:
+	@echo "Generating SQLC files..."
+	@sqlc generate
 
 openapi:
 	@echo "Generating OpenAPI interface..."

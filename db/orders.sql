@@ -2,7 +2,7 @@
 SELECT * FROM orders WHERE id = ?
 LIMIT 1;
 
--- name: FindOrderItems :many
+-- name: ListOrderItems :many
 SELECT * FROM order_items
 WHERE order_id = ?;
 

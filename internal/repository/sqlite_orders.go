@@ -33,7 +33,7 @@ func (r *SQLiteOrderRepository) Find(ctx context.Context, id string) (*orders.Or
 
 	orderEntity := orders.New(order.ID, order.CustomerName)
 
-	orderItems, err := r.queries.FindOrderItems(ctx, order.ID)
+	orderItems, err := r.queries.ListOrderItems(ctx, order.ID)
 	if err != nil {
 		return nil, err
 	}

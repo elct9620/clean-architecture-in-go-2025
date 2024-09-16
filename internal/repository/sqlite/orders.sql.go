@@ -76,13 +76,13 @@ func (q *Queries) FindOrder(ctx context.Context, id string) (Order, error) {
 	return i, err
 }
 
-const findOrderItems = `-- name: FindOrderItems :many
+const listOrderItems = `-- name: ListOrderItems :many
 SELECT id, order_id, name, quantity, unit_price FROM order_items
 WHERE order_id = ?
 `
 
-func (q *Queries) FindOrderItems(ctx context.Context, orderID string) ([]OrderItem, error) {
-	rows, err := q.db.QueryContext(ctx, findOrderItems, orderID)
+func (q *Queries) ListOrderItems(ctx context.Context, orderID string) ([]OrderItem, error) {
+	rows, err := q.db.QueryContext(ctx, listOrderItems, orderID)
 	if err != nil {
 		return nil, err
 	}
