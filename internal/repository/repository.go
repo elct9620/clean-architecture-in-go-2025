@@ -21,8 +21,6 @@ var BoltSet = wire.NewSet(
 	wire.Bind(new(usecase.TokenRepository), new(*BoltTokenRepository)),
 )
 
-type SQLiteDDL string
-
 var SQLiteSet = wire.NewSet(
 	sqlite.New,
 	NewSQLiteOrderRepository,
