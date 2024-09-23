@@ -26,5 +26,7 @@ var SQLiteSet = wire.NewSet(
 	NewSQLiteOrderRepository,
 	wire.Bind(new(usecase.OrderRepository), new(*SQLiteOrderRepository)),
 	NewSQLiteTokenRepository,
-	wire.Bind(new(usecase.TokenRepository), new(*SQLiteTokenRepository)),
+	wire.Bind(new(CachableTokenRepository), new(*SQLiteTokenRepository)),
+	NewLruTokenRepository,
+	wire.Bind(new(usecase.TokenRepository), new(*LruTokenRepository)),
 )

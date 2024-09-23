@@ -75,9 +75,10 @@ func initializeSQLite() (*grpc.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
+	lruTokenRepository := repository.NewLruTokenRepository(sqLiteTokenRepository)
 	validatorValidator := validator.New()
-	placeOrder := usecase.NewPlaceOrder(sqLiteOrderRepository, sqLiteTokenRepository, validatorValidator)
-	lookupOrder := usecase.NewLookupOrder(sqLiteOrderRepository, sqLiteTokenRepository)
+	placeOrder := usecase.NewPlaceOrder(sqLiteOrderRepository, lruTokenRepository, validatorValidator)
+	lookupOrder := usecase.NewLookupOrder(sqLiteOrderRepository, lruTokenRepository)
 	orderServer := &grpc.OrderServer{
 		PlaceOrderUsecase:  placeOrder,
 		LookupOrderUsecase: lookupOrder,
