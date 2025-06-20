@@ -17,7 +17,11 @@ func provideBoltDb() (*bolt.DB, func(), error) {
 		return nil, nil, err
 	}
 
-	return db, func() { db.Close() }, nil
+	return db, func() {
+		if err := db.Close(); err != nil {
+			log.Printf("Error closing bolt database: %v", err)
+		}
+	}, nil
 }
 
 func provideSQLiteDb() (*sql.DB, func(), error) {
@@ -30,7 +34,11 @@ func provideSQLiteDb() (*sql.DB, func(), error) {
 		return nil, nil, err
 	}
 
-	return db, func() { db.Close() }, nil
+	return db, func() {
+		if err := db.Close(); err != nil {
+			log.Printf("Error closing SQLite database: %v", err)
+		}
+	}, nil
 }
 
 func main() {
